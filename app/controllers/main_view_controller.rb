@@ -158,7 +158,7 @@ class MainViewController < UIViewController
 	def invoke_sms
 		MFMessageComposeViewController.alloc.init.tap do |sms|
   			sms.messageComposeDelegate = self
-      		sms.recipients = ["2024561111", "012-4325-234"]
+			sms.recipients = ["2024561111", "012-4325-234"]
   			sms.body = "It's bad luck to be superstitious."
   			self.presentModalViewController(sms, animated:true)
     	end if MFMessageComposeViewController.canSendText
