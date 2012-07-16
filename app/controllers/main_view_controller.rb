@@ -10,92 +10,44 @@ class MainViewController < UIViewController
 	BUTTON_SPACING_X = 5
 	BUTTON_WIDTH = 130
 	BUTTON_HEIGHT = 25
-	BUTTON_TOP = 15
+	BUTTON_TOP = 0
+
+	# Dynamically built a grid of buttons - if I did this correctly, you can simply modify the CONSTANTS (above) and it will auto-magically arrange the buttons
+	$xpos = (UIScreen.mainScreen.bounds.size.width - ((BUTTON_WIDTH * BUTTON_COLUMNS) + (BUTTON_SPACING_X * (BUTTON_COLUMNS-1)))) /2
+	$ypos = BUTTON_TOP
+
+	$buttons = []
+
+	def makeButton(title)
+		button = UIButton.buttonWithType(UIButtonTypeRoundedRect)
+    button.backgroundColor = CONTROLS_BUTTON_COLOR_BACKGROUND
+    button.setTitle("#{title}", forState:UIControlStateNormal)
+    button.setTitleColor(CONTROLS_BUTTON_COLOR_TITLE, forState:UIControlStateNormal)
+    button.layer.setBorderColor(UIColor.blackColor.CGColor)
+    button.frame=[[$xpos, $ypos += (BUTTON_HEIGHT + BUTTON_SPACING_Y)], [BUTTON_WIDTH, BUTTON_HEIGHT]]
+    button.addTarget(self, action:'buttonTouch', forControlEvents:UIControlEventTouchUpInside)
+    $buttons << button
+	end
 
 	def viewDidLoad
 		self.title = "iPhone Built-in Applicatons"
 		self.view.backgroundColor = UIColor.whiteColor
 
-		# Dynamically built a grid of buttons - if I did this correctly, you can simply modify the CONSTANTS (above) and it will auto-magically arrange the buttons
-		xpos = (UIScreen.mainScreen.bounds.size.width - ((BUTTON_WIDTH * BUTTON_COLUMNS) + (BUTTON_SPACING_X * (BUTTON_COLUMNS-1)))) /2
-		ypos = BUTTON_TOP
+		email_btn = makeButton('E-mail')
+		sms_buton = makeButton('SMS')
+		browser_btn = makeButton('Browser')
+		phone_btn = makeButton('Phone')
 
-		email_btn = UIButton.buttonWithType(UIButtonTypeRoundedRect)
-    email_btn.backgroundColor = CONTROLS_BUTTON_COLOR_BACKGROUND
-    email_btn.setTitle("E-Mail", forState:UIControlStateNormal)
-    email_btn.setTitleColor(CONTROLS_BUTTON_COLOR_TITLE, forState:UIControlStateNormal)
-    email_btn.layer.setBorderColor(UIColor.blackColor.CGColor)
-    email_btn.frame = [[xpos, ypos], [BUTTON_WIDTH, BUTTON_HEIGHT] ]
-		self.view.addSubview(email_btn)
+		$xpos += (BUTTON_WIDTH + BUTTON_SPACING_X)
+		$ypos = BUTTON_TOP
 
-		sms_btn = UIButton.buttonWithType(UIButtonTypeRoundedRect)
-		sms_btn.backgroundColor = CONTROLS_BUTTON_COLOR_BACKGROUND
-		sms_btn.setTitle("SMS", forState:UIControlStateNormal)
-		sms_btn.setTitleColor(CONTROLS_BUTTON_COLOR_TITLE, forState:UIControlStateNormal)
-		sms_btn.layer.setBorderColor(UIColor.blackColor.CGColor)
-		sms_btn.frame = [[xpos, ypos += (BUTTON_HEIGHT + BUTTON_SPACING_Y)], [BUTTON_WIDTH, BUTTON_HEIGHT]]
-		self.view.addSubview(sms_btn)
+		camera_btn = makeButton('Camera')
+		library_btn = makeButton('Library')
+		contacts_btn = makeButton('Contacts')
+		add_contact_btn = makeButton('Add A Contact')
 
-		browser_btn = UIButton.buttonWithType(UIButtonTypeRoundedRect)
-		browser_btn.backgroundColor = CONTROLS_BUTTON_COLOR_BACKGROUND
-		browser_btn.setTitle("Browser", forState:UIControlStateNormal)
-		browser_btn.setTitleColor(CONTROLS_BUTTON_COLOR_TITLE, forState:UIControlStateNormal)
-		browser_btn.layer.setBorderColor(UIColor.blackColor.CGColor)
-		browser_btn.frame = [[xpos, ypos += (BUTTON_HEIGHT + BUTTON_SPACING_Y)], [BUTTON_WIDTH, BUTTON_HEIGHT]]
-		self.view.addSubview(browser_btn)
+		$buttons.each { |button| self.view.addSubview button }
 
-		phone_btn = UIButton.buttonWithType(UIButtonTypeRoundedRect)
-		phone_btn.backgroundColor = CONTROLS_BUTTON_COLOR_BACKGROUND
-		phone_btn.setTitle("Phone", forState:UIControlStateNormal)
-		phone_btn.setTitleColor(CONTROLS_BUTTON_COLOR_TITLE, forState:UIControlStateNormal)
-		phone_btn.layer.setBorderColor(UIColor.blackColor.CGColor)
-		phone_btn.frame = [[xpos, ypos += (BUTTON_HEIGHT + BUTTON_SPACING_Y)], [BUTTON_WIDTH, BUTTON_HEIGHT]]
-		self.view.addSubview(phone_btn)
-
-		xpos += (BUTTON_WIDTH + BUTTON_SPACING_X)
-		ypos = BUTTON_TOP
-
-		camera_btn = UIButton.buttonWithType(UIButtonTypeRoundedRect)
-		camera_btn.backgroundColor = CONTROLS_BUTTON_COLOR_BACKGROUND
-		camera_btn.setTitle("Camera", forState:UIControlStateNormal)
-		camera_btn.setTitleColor(CONTROLS_BUTTON_COLOR_TITLE, forState:UIControlStateNormal)
-		camera_btn.layer.setBorderColor(UIColor.blackColor.CGColor)
-		camera_btn.frame = [[xpos, ypos], [BUTTON_WIDTH, BUTTON_HEIGHT]]
-		self.view.addSubview(camera_btn)
-
-		library_btn = UIButton.buttonWithType(UIButtonTypeRoundedRect)
-		library_btn.backgroundColor = CONTROLS_BUTTON_COLOR_BACKGROUND
-		library_btn.setTitle("Library", forState:UIControlStateNormal)
-		library_btn.setTitleColor(CONTROLS_BUTTON_COLOR_TITLE, forState:UIControlStateNormal)
-		library_btn.layer.setBorderColor(UIColor.blackColor.CGColor)
-		library_btn.frame = [[xpos, ypos += (BUTTON_HEIGHT + BUTTON_SPACING_Y)], [BUTTON_WIDTH, BUTTON_HEIGHT]]
-		self.view.addSubview(library_btn)
-
-		contacts_btn = UIButton.buttonWithType(UIButtonTypeRoundedRect)
-		contacts_btn.backgroundColor = CONTROLS_BUTTON_COLOR_BACKGROUND
-		contacts_btn.setTitle("Contacts", forState:UIControlStateNormal)
-		contacts_btn.setTitleColor(CONTROLS_BUTTON_COLOR_TITLE, forState:UIControlStateNormal)
-		contacts_btn.layer.setBorderColor(UIColor.blackColor.CGColor)
-		contacts_btn.frame = [[xpos, ypos += (BUTTON_HEIGHT + BUTTON_SPACING_Y)], [BUTTON_WIDTH, BUTTON_HEIGHT]]
-		self.view.addSubview(contacts_btn)
-
-		add_contact_btn = UIButton.buttonWithType(UIButtonTypeRoundedRect)
-		add_contact_btn.backgroundColor = CONTROLS_BUTTON_COLOR_BACKGROUND
-		add_contact_btn.setTitle("Add A Contact", forState:UIControlStateNormal)
-		add_contact_btn.setTitleColor(CONTROLS_BUTTON_COLOR_TITLE, forState:UIControlStateNormal)
-		add_contact_btn.layer.setBorderColor(UIColor.blackColor.CGColor)
-		add_contact_btn.frame = [[xpos, ypos += (BUTTON_HEIGHT + BUTTON_SPACING_Y)], [BUTTON_WIDTH, BUTTON_HEIGHT]]
-		self.view.addSubview(add_contact_btn)
-
-		# In an effort to be DRY we are reusing a single callback method for TouchUpInside
-		email_btn.addTarget(self, action:'buttonTouch', forControlEvents:UIControlEventTouchUpInside)
-		sms_btn.addTarget(self, action:'buttonTouch', forControlEvents:UIControlEventTouchUpInside)
-		browser_btn.addTarget(self, action:'buttonTouch', forControlEvents:UIControlEventTouchUpInside)
-		phone_btn.addTarget(self, action:'buttonTouch', forControlEvents:UIControlEventTouchUpInside)
-		camera_btn.addTarget(self, action:'buttonTouch', forControlEvents:UIControlEventTouchUpInside)
-		library_btn.addTarget(self, action:'buttonTouch', forControlEvents:UIControlEventTouchUpInside)
-		contacts_btn.addTarget(self, action:'buttonTouch', forControlEvents:UIControlEventTouchUpInside)
-		add_contact_btn.addTarget(self, action:'add_contact', forControlEvents:UIControlEventTouchUpInside)
 	end
 
 	def buttonTouch(*sender)
@@ -114,6 +66,8 @@ class MainViewController < UIViewController
 			photo_library
 		when "contacts"
 			contacts
+		when "add_contact"
+			add_contact
 		end
 	end
 
@@ -195,7 +149,7 @@ class MainViewController < UIViewController
 
   # ==========  Photo Library ====================================================
   ## The UIImagePickerController class manages customizable, system-supplied user
-  ## interfaces for taking pictures and movies on supported devices.  It also aids 
+  ## interfaces for taking pictures and movies on supported devices.  It also aids
   ## choosing saved images and movies for use in your app.
   ## An image picker controller manages user interactions and delivers the results
   ## of those interactions to a delegate object.
@@ -241,7 +195,7 @@ class MainViewController < UIViewController
 
   # ==========  Add Contact ======================================================
   ## The ABNewPersonViewController class (whose instances are known as new-person
-  ## view controllers) implements the view controller used to create a contact. 
+  ## view controllers) implements the view controller used to create a contact.
 	def add_contact
 		newPersonVC = ABNewPersonViewController.alloc.init
 		newPersonVC.newPersonViewDelegate = self
