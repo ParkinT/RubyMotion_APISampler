@@ -2,7 +2,7 @@
 $:.unshift("/Library/RubyMotion/lib")
 require 'motion/project'
 
-require 'app_properties'
+require './app_properties'
 props = AppProperties.new
 
 Motion::Project::App.setup do |app|
