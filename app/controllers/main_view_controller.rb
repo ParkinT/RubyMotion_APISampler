@@ -76,24 +76,24 @@ class MainViewController < UIViewController
 	# build another class to handle callbacks.
 
 
-  # ==========  MFMailComposeView ===============================================
-  ## The MFMailComposeViewController class provides a standard interface that manages
-  ## the editing and sending of an email message. You can use this view controller to
-  ## display a standard email view inside your application and populate the fields of
-  ## that view with initial values, such as the subject, email recipients, body text,
-  ## and attachments. The user can edit the initial contents you specify and choose
-  ## to send the email or cancel the operation.
+  	# ==========  MFMailComposeView ===============================================
+  	## The MFMailComposeViewController class provides a standard interface that manages
+  	## the editing and sending of an email message. You can use this view controller to
+  	## display a standard email view inside your application and populate the fields of
+  	## that view with initial values, such as the subject, email recipients, body text,
+  	## and attachments. The user can edit the initial contents you specify and choose
+  	## to send the email or cancel the operation.
 	def email
-		if MFMailComposeViewController.canSendMail
-			mailComposeVC = MailComposeViewController.alloc.init
-			mailComposeVC.mailComposeDelegate = self
-			mailComposeVC.setToRecipients(["the.world@gmail.com"])
-			mailComposeVC.setSubject("Email Subject")
-			mailComposeVC.setCcRecipients(["senate@whitehouse.gov", "friends@whitehouse.com"])
-			mailComposeVC.setBccRecipients(["congress@whitehouse.gov", "noname@aol.com"])
-#			mailComposeVC.setMessageBody("Email Body", false)     # WHY DOES THIS THROW AN ERROR ?!
-			self.presentModalViewController(mailComposeVC, animated:true)
-		end
+		MFMailComposeViewController.alloc.init.tap do |mail|
+			mail.mailComposeDelegate = self
+  		mail.toRecipients = ["the.world@gmail.com"]
+  		mail.subject = "Email Subject"
+			mail.ccRecipients = ["senate@whitehouse.gov", "friends@whitehouse.com"]
+			mail.bccRecipients = ["congress@whitehouse.gov", "noname@aol.com"]
+  		mail.setMessageBody("Email Body", isHTML:false)
+  		
+      		self.presentModalViewController(mail, animated:true)
+    	end if MFMailComposeViewController.canSendMail
 	end
 
 	def mailComposeController(controller, didFinishWithResult:result, error:error)
@@ -101,21 +101,23 @@ class MainViewController < UIViewController
 	end
 	# ==============================================================================
 
-  # ==========  MFMessageComposeView =============================================
-  ## The MFMessageComposeViewController class provides a standard system user
-  ## interface for composing SMS (Short Message Service) text messages. Use this
-  ## class to configure the initial recipients and body of the message, as desired,
-  ## and to configure a delegate object to respond to the final result of the user’s
-  ## action—whether they chose to cancel or send the message. After configuring initial
-  ## values, present the view controller modally using the presentModalViewController:animated:
-  ## method. When done, dismiss it using the dismissModalViewControllerAnimated: method.
+  	# ==========  MFMessageComposeView =============================================
+  	## The MFMessageComposeViewController class provides a standard system user
+  	## interface for composing SMS (Short Message Service) text messages. Use this
+  	## class to configure the initial recipients and body of the message, as desired,
+  	## and to configure a delegate object to respond to the final result of the user’s
+  	## action—whether they chose to cancel or send the message. After configuring initial
+ 	## values, present the view controller modally using the presentModalViewController:animated:
+  	## method. When done, dismiss it using the dismissModalViewControllerAnimated: method.
 	def invoke_sms
-		if MFMessageComposeViewController.canSendText
-			messageComposeVC = SMSComposeViewController.alloc.init
-			messageComposeVC.messageComposeDelegate = self
-			messageComposeVC.setBody("It's bad luck to be superstitious.")
-			self.presentModalViewController(messageComposeVC, true)
-		end
+		MFMessageComposeViewController.alloc.init.tap do |sms|
+  			sms.messageComposeDelegate = self
+			sms.recipients = ["2024561111", "012-4325-234"]
+  			sms.body = "It's bad luck to be superstitious."
+  			self.presentModalViewController(sms, animated:true)
+    	end if MFMessageComposeViewController.canSendText
+    	# will return an error on simulator (Application tried to push a nil view controller on target <MFMessageComposeViewController:) 
+    	#if you have Messages beta on OS X Lion. installed
 	end
 
 	def messageComposeViewController(controller, didFinishWithResult:result)
@@ -163,12 +165,13 @@ class MainViewController < UIViewController
 
   # ==========  Camera ===========================================================
 	def invoke_camera
-		return unless UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceTypeCamera)
-		pickController = UIImagePickerController.alloc.init
-		pickController.delegate = self
-		pickController.sourceType = UIImagePickerControllerSourceTypeCamera
-		pickController.allowsEditing = true
-		self.presentModalViewController(pickController, animated:true)
+		UIImagePickerController.alloc.init.tap do |picker|
+  			picker.delegate = self
+  			picker.sourceType = UIImagePickerControllerSourceTypeCamera
+  			picker.allowsEditing = true
+  			
+  			self.presentModalViewController(picker, animated:true)
+		end if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceTypeCamera)
 	end
 	# ==============================================================================
 
@@ -187,7 +190,7 @@ class MainViewController < UIViewController
 		self.dismissModalViewControllerAnimated(true)
 	end
 	def peoplePickerNavigationController(peoplePicker, shouldContinueAfterSelectingPerson:person, property:property, identifier:identifier)
-		peoplePicker.setDisplayedProperties([KABPersonPhoneProperty])
+		peoplePicker.displayedProperties = [KABPersonPhoneProperty]
 		peoplePicker.dismissModalViewControllerAnimated(true)
 		return false
 	end
